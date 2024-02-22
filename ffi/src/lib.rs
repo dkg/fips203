@@ -5,6 +5,15 @@ pub struct ml_kem_shared_secret {
     data: [u8; fips203::SSK_LEN],
 }
 
+pub const ML_KEM_OK: u8 = 0;
+pub const ML_KEM_NULL_PTR_ERROR: u8 = 1;
+pub const ML_KEM_SERIALIZATION_ERROR: u8 = 2;
+pub const ML_KEM_DESERIALIZATION_ERROR: u8 = 3;
+pub const ML_KEM_KEYGEN_ERROR: u8 = 4;
+pub const ML_KEM_ENCAPS_ERROR: u8 = 5;
+pub const ML_KEM_DECAPS_ERROR: u8 = 6;
+
+
 // ML-KEM-512
 
 #[repr(C)]
@@ -22,23 +31,23 @@ pub struct ml_kem_512_ciphertext {
 
 #[no_mangle]
 pub extern "C" fn ml_kem_512_keygen(encaps_out: Option<&mut ml_kem_512_encaps_key>,
-                                    decaps_out: Option<&mut ml_kem_512_decaps_key>) -> bool {
+                                    decaps_out: Option<&mut ml_kem_512_decaps_key>) -> u8 {
     use fips203::traits::{KeyGen, SerDes};
 
     if let (Some(encaps_out), Some(decaps_out)) = (encaps_out, decaps_out) {
         let (ek, dk) = fips203::ml_kem_512::KG::try_keygen_vt().unwrap();
         encaps_out.data = ek.into_bytes();
         decaps_out.data = dk.into_bytes();
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_512_encaps(encaps: Option<&ml_kem_512_encaps_key>,
                                     ciphertext_out: Option<&mut ml_kem_512_ciphertext>,
-                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Encaps, SerDes};
 
     if let (Some(encaps), Some(ciphertext_out), Some(shared_secret_out)) = (encaps, ciphertext_out, shared_secret_out) {
@@ -47,16 +56,16 @@ pub extern "C" fn ml_kem_512_encaps(encaps: Option<&ml_kem_512_encaps_key>,
         shared_secret_out.data = ssk.into_bytes();
         ciphertext_out.data = ct.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_512_decaps(decaps: Option<&ml_kem_512_decaps_key>,
                                     ciphertext: Option<&ml_kem_512_ciphertext>,
-                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Decaps, SerDes};
 
     if let (Some(decaps), Some(ciphertext), Some(shared_secret_out)) = (decaps, ciphertext, shared_secret_out) {
@@ -66,9 +75,9 @@ pub extern "C" fn ml_kem_512_decaps(decaps: Option<&ml_kem_512_decaps_key>,
 
         shared_secret_out.data = ssk.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
@@ -91,7 +100,7 @@ pub struct ml_kem_768_ciphertext {
 
 #[no_mangle]
 pub extern "C" fn ml_kem_768_keygen(encaps_out: Option<&mut ml_kem_768_encaps_key>,
-                                    decaps_out: Option<&mut ml_kem_768_decaps_key>) -> bool {
+                                    decaps_out: Option<&mut ml_kem_768_decaps_key>) -> u8 {
     use fips203::traits::{KeyGen, SerDes};
 
     if let (Some(encaps_out), Some(decaps_out)) = (encaps_out, decaps_out) {
@@ -99,16 +108,16 @@ pub extern "C" fn ml_kem_768_keygen(encaps_out: Option<&mut ml_kem_768_encaps_ke
         encaps_out.data = ek.into_bytes();
         decaps_out.data = dk.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_768_encaps(encaps: Option<&ml_kem_768_encaps_key>,
                                     ciphertext_out: Option<&mut ml_kem_768_ciphertext>,
-                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Encaps, SerDes};
 
     if let (Some(encaps), Some(ciphertext_out), Some(shared_secret_out)) = (encaps, ciphertext_out, shared_secret_out) {
@@ -117,16 +126,16 @@ pub extern "C" fn ml_kem_768_encaps(encaps: Option<&ml_kem_768_encaps_key>,
         shared_secret_out.data = ssk.into_bytes();
         ciphertext_out.data = ct.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_768_decaps(decaps: Option<&ml_kem_768_decaps_key>,
                                     ciphertext: Option<&ml_kem_768_ciphertext>,
-                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                    shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Decaps, SerDes};
 
     if let (Some(decaps), Some(ciphertext), Some(shared_secret_out)) = (decaps, ciphertext, shared_secret_out) {
@@ -136,9 +145,9 @@ pub extern "C" fn ml_kem_768_decaps(decaps: Option<&ml_kem_768_decaps_key>,
 
         shared_secret_out.data = ssk.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
@@ -160,7 +169,7 @@ pub struct ml_kem_1024_ciphertext {
 
 #[no_mangle]
 pub extern "C" fn ml_kem_1024_keygen(encaps_out: Option<&mut ml_kem_1024_encaps_key>,
-                                     decaps_out: Option<&mut ml_kem_1024_decaps_key>) -> bool {
+                                     decaps_out: Option<&mut ml_kem_1024_decaps_key>) -> u8 {
     use fips203::traits::{KeyGen, SerDes};
 
     if let (Some(encaps_out), Some(decaps_out)) = (encaps_out, decaps_out) {
@@ -168,16 +177,16 @@ pub extern "C" fn ml_kem_1024_keygen(encaps_out: Option<&mut ml_kem_1024_encaps_
         encaps_out.data = ek.into_bytes();
         decaps_out.data = dk.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_1024_encaps(encaps: Option<&ml_kem_1024_encaps_key>,
                                      ciphertext_out: Option<&mut ml_kem_1024_ciphertext>,
-                                     shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                     shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Encaps, SerDes};
 
     if let (Some(encaps), Some(ciphertext_out), Some(shared_secret_out)) = (encaps, ciphertext_out, shared_secret_out) {
@@ -186,16 +195,16 @@ pub extern "C" fn ml_kem_1024_encaps(encaps: Option<&ml_kem_1024_encaps_key>,
         shared_secret_out.data = ssk.into_bytes();
         ciphertext_out.data = ct.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }
 
 #[no_mangle]
 pub extern "C" fn ml_kem_1024_decaps(decaps: Option<&ml_kem_1024_decaps_key>,
                                      ciphertext: Option<&ml_kem_1024_ciphertext>,
-                                     shared_secret_out: Option<&mut ml_kem_shared_secret>) -> bool {
+                                     shared_secret_out: Option<&mut ml_kem_shared_secret>) -> u8 {
     use fips203::traits::{Decaps, SerDes};
 
     if let (Some(decaps), Some(ciphertext), Some(shared_secret_out)) = (decaps, ciphertext, shared_secret_out) {
@@ -205,8 +214,8 @@ pub extern "C" fn ml_kem_1024_decaps(decaps: Option<&ml_kem_1024_decaps_key>,
 
         shared_secret_out.data = ssk.into_bytes();
 
-        return true;
+        return ML_KEM_OK;
     } else {
-        return false;
+        return ML_KEM_NULL_PTR_ERROR;
     }
 }

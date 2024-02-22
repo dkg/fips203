@@ -1,3 +1,5 @@
+#ifndef __FIPS203_H__
+#define __FIPS203_H__
 /*
   Minimalist ML-KEM C interface
   Author: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
@@ -10,7 +12,17 @@
   These functions return true on success, false on error.
 */
 #include <stdint.h>
-#include <stdbool.h>
+
+typedef uint8_t ml_kem_err;
+
+const ml_kem_err ML_KEM_OK = 0;
+const ml_kem_err ML_KEM_NULL_PTR_ERROR = 1;
+const ml_kem_err ML_KEM_SERIALIZATION_ERROR = 2;
+const ml_kem_err ML_KEM_DESERIALIZATION_ERROR = 3;
+const ml_kem_err ML_KEM_KEYGEN_ERROR = 4;
+const ml_kem_err ML_KEM_ENCAPS_ERROR = 5;
+const ml_kem_err ML_KEM_DECAPS_ERROR = 6;
+
 
 typedef struct ml_kem_shared_secret {
   uint8_t data[32];
@@ -57,36 +69,40 @@ typedef struct ml_kem_1024_ciphertext {
 extern "C" {
 #endif
 
-bool ml_kem_512_keygen(ml_kem_512_encaps_key *encaps_out, ml_kem_512_decaps_key *decaps_out);
+ml_kem_err ml_kem_512_keygen(ml_kem_512_encaps_key *encaps_out,
+                             ml_kem_512_decaps_key *decaps_out);
 
-bool ml_kem_512_encaps(const ml_kem_512_encaps_key *encaps,
-                       ml_kem_512_ciphertext *ciphertext_out,
-                       ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_512_encaps(const ml_kem_512_encaps_key *encaps,
+                             ml_kem_512_ciphertext *ciphertext_out,
+                             ml_kem_shared_secret *shared_secret_out);
 
-bool ml_kem_512_decaps(const ml_kem_512_decaps_key *decaps,
-                       const ml_kem_512_ciphertext *ciphertext,
-                       ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_512_decaps(const ml_kem_512_decaps_key *decaps,
+                             const ml_kem_512_ciphertext *ciphertext,
+                             ml_kem_shared_secret *shared_secret_out);
 
-bool ml_kem_768_keygen(ml_kem_768_encaps_key *encaps_out, ml_kem_768_decaps_key *decaps_out);
+ml_kem_err ml_kem_768_keygen(ml_kem_768_encaps_key *encaps_out,
+                             ml_kem_768_decaps_key *decaps_out);
 
-bool ml_kem_768_encaps(const ml_kem_768_encaps_key *encaps,
-                       ml_kem_768_ciphertext *ciphertext_out,
-                       ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_768_encaps(const ml_kem_768_encaps_key *encaps,
+                             ml_kem_768_ciphertext *ciphertext_out,
+                             ml_kem_shared_secret *shared_secret_out);
 
-bool ml_kem_768_decaps(const ml_kem_768_decaps_key *decaps,
-                       const ml_kem_768_ciphertext *ciphertext,
-                       ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_768_decaps(const ml_kem_768_decaps_key *decaps,
+                             const ml_kem_768_ciphertext *ciphertext,
+                             ml_kem_shared_secret *shared_secret_out);
 
-bool ml_kem_1024_keygen(ml_kem_1024_encaps_key *encaps_out, ml_kem_1024_decaps_key *decaps_out);
+ml_kem_err ml_kem_1024_keygen(ml_kem_1024_encaps_key *encaps_out,
+                              ml_kem_1024_decaps_key *decaps_out);
 
-bool ml_kem_1024_encaps(const ml_kem_1024_encaps_key *encaps,
-                        ml_kem_1024_ciphertext *ciphertext_out,
-                        ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_1024_encaps(const ml_kem_1024_encaps_key *encaps,
+                              ml_kem_1024_ciphertext *ciphertext_out,
+                              ml_kem_shared_secret *shared_secret_out);
 
-bool ml_kem_1024_decaps(const ml_kem_1024_decaps_key *decaps,
-                        const ml_kem_1024_ciphertext *ciphertext,
-                        ml_kem_shared_secret *shared_secret_out);
+ml_kem_err ml_kem_1024_decaps(const ml_kem_1024_decaps_key *decaps,
+                              const ml_kem_1024_ciphertext *ciphertext,
+                              ml_kem_shared_secret *shared_secret_out);
 
 #ifdef  __cplusplus
 } // extern "C"
 #endif
+#endif // __FIPS203_H__
