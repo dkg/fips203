@@ -20,8 +20,8 @@ const ml_kem_err ML_KEM_NULL_PTR_ERROR = 1;
 const ml_kem_err ML_KEM_SERIALIZATION_ERROR = 2;
 const ml_kem_err ML_KEM_DESERIALIZATION_ERROR = 3;
 const ml_kem_err ML_KEM_KEYGEN_ERROR = 4;
-const ml_kem_err ML_KEM_ENCAPS_ERROR = 5;
-const ml_kem_err ML_KEM_DECAPS_ERROR = 6;
+const ml_kem_err ML_KEM_ENCAPSULATION_ERROR = 5;
+const ml_kem_err ML_KEM_DECAPSULATION_ERROR = 6;
 
 
 typedef struct ml_kem_shared_secret {

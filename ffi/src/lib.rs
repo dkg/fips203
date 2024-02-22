@@ -10,8 +10,8 @@ pub const ML_KEM_NULL_PTR_ERROR: u8 = 1;
 pub const ML_KEM_SERIALIZATION_ERROR: u8 = 2;
 pub const ML_KEM_DESERIALIZATION_ERROR: u8 = 3;
 pub const ML_KEM_KEYGEN_ERROR: u8 = 4;
-pub const ML_KEM_ENCAPS_ERROR: u8 = 5;
-pub const ML_KEM_DECAPS_ERROR: u8 = 6;
+pub const ML_KEM_ENCAPSULATION_ERROR: u8 = 5;
+pub const ML_KEM_DECAPSULATION_ERROR: u8 = 6;
 
 // ML-KEM-512
 
@@ -60,7 +60,7 @@ pub extern "C" fn ml_kem_512_encaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok((ssk, ct)) = ek.try_encaps_vt() else {
-        return ML_KEM_ENCAPS_ERROR;
+        return ML_KEM_ENCAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
@@ -85,7 +85,7 @@ pub extern "C" fn ml_kem_512_decaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok(ssk) = dk.try_decaps_vt(&ct) else {
-        return ML_KEM_DECAPS_ERROR;
+        return ML_KEM_DECAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
@@ -139,7 +139,7 @@ pub extern "C" fn ml_kem_768_encaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok((ssk, ct)) = ek.try_encaps_vt() else {
-        return ML_KEM_ENCAPS_ERROR;
+        return ML_KEM_ENCAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
@@ -164,7 +164,7 @@ pub extern "C" fn ml_kem_768_decaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok(ssk) = dk.try_decaps_vt(&ct) else {
-        return ML_KEM_DECAPS_ERROR;
+        return ML_KEM_DECAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
@@ -219,7 +219,7 @@ pub extern "C" fn ml_kem_1024_encaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok((ssk, ct)) = ek.try_encaps_vt() else {
-        return ML_KEM_ENCAPS_ERROR;
+        return ML_KEM_ENCAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
@@ -244,7 +244,7 @@ pub extern "C" fn ml_kem_1024_decaps(
         return ML_KEM_DESERIALIZATION_ERROR;
     };
     let Ok(ssk) = dk.try_decaps_vt(&ct) else {
-        return ML_KEM_DECAPS_ERROR;
+        return ML_KEM_DECAPSULATION_ERROR;
     };
 
     shared_secret_out.data = ssk.into_bytes();
