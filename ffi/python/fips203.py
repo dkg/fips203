@@ -320,6 +320,12 @@ class _ML_KEM():
                                       ctypes.POINTER(_DecapsKey)]
             ffi['keygen'].restype = ctypes.c_uint8
 
+            ffi['keygen_from_seed'] = cls.lib[f'ml_kem_{level}_keygen_from_seed']
+            ffi['keygen_from_seed'].argtypes = [ctypes.POINTER(_Seed),
+                                                ctypes.POINTER(_EncapsKey),
+                                                ctypes.POINTER(_DecapsKey)]
+            ffi['keygen_from_seed'].restype = ctypes.c_uint8
+
             ffi['encaps'] = cls.lib[f'ml_kem_{level}_encaps']
             ffi['encaps'].argtypes = [ctypes.POINTER(_EncapsKey),
                                       ctypes.POINTER(_Ciphertext),
@@ -362,6 +368,19 @@ class _ML_KEM():
         return (ek, dk)
 
 
+    @classmethod
+    def _keygen_with_seed(cls, strength: int, seed: Seed) -> Tuple[EncapsulationKey,
+                                                                   DecapsulationKey]:
+        ek = EncapsulationKey(strength)
+        dk = DecapsulationKey(strength)
+
+        ret = Err(cls.strength(strength)['keygen'](ctypes.byref(ek._ek),
+                                                   ctypes.byref(dk._dk)))
+        if ret is not Err.OK:
+            raise Exception(f"ml_kem_{strength}_keygen() returned "
+                            f"{ret} ({ret.name})")
+        return (ek, dk)
+
 class ML_KEM(ABC):
     '''Abstract base class for all ML-KEM (FIPS 203) parameter sets.'''
 
@@ -375,6 +394,11 @@ class ML_KEM(ABC):
     def keygen(cls) -> Tuple[EncapsulationKey, DecapsulationKey]:
         '''Generate a pair of Encapsulation and Decapsulation Keys.'''
         return _ML_KEM._keygen(cls._strength)
+
+    @classmethod
+    def keygen_with_seed(cls, seed: Seed) -> Tuple[EncapsulationKey, DecapsulationKey]:
+        '''Generate a pair of Encapsulation and Decapsulation Keys from a seed.'''
+        return _ML_KEM._keygen_with_seed(cls._strength, seed)
 
 
 class ML_KEM_512(ML_KEM):
